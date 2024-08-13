@@ -31,10 +31,13 @@ func (s *Server) Start() error {
 	//start http server
 	if err := http.ListenAndServe(s.listenAddr, mux); err != nil {
 		slog.Error("server", "error starting the server", err)
+		return err
 	}
 
 	//start accepting new peers
-	s.AcceptPeers()
+	if err := s.AcceptPeers(); err != nil {
+		return err
+	}
 
 	return nil
 }
