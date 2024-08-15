@@ -12,13 +12,11 @@ func AuthHandler(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		tokenString := r.Header.Get("authorization")
-		fmt.Println("tk", tokenString)
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 			return []byte(helper.SigningKey), nil
 		})
 
 		if err != nil {
-			fmt.Println("e", err)
 			w.WriteHeader(http.StatusUnauthorized)
 			fmt.Fprintf(w, "unable to parse the token")
 			return

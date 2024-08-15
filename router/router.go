@@ -39,8 +39,8 @@ func (r *Router) RegisterRoutes() {
 	})
 }
 
-func (r *Router) Route(pattern string, controller helper.ControllerFunc, method string, authrorize bool) {
-	if authrorize {
+func (r *Router) Route(pattern string, controller helper.ControllerFunc, method string, auth bool) {
+	if auth {
 		r.HandleFunc(pattern, middleware.Logger(middleware.AuthHandler(middleware.ErrorHandler(controller, method))))
 	} else {
 		r.HandleFunc(pattern, middleware.Logger(middleware.ErrorHandler(controller, method)))

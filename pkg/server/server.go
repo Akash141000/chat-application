@@ -5,7 +5,6 @@ import (
 	"chat-app/pkg/peer"
 	"chat-app/router"
 	"fmt"
-	"net"
 	"net/http"
 	"sync"
 
@@ -17,11 +16,10 @@ type Server struct {
 
 	addPeerCh chan peer.Peer
 	mu        sync.RWMutex
-	peers     map[helper.UserId]*net.Conn
+	peers     map[helper.UserId]peer.Conn
 }
 
 func (s *Server) Start() error {
-
 	slog.Info("server", "starting the server", s.listenAddr)
 
 	//register the routes
@@ -45,18 +43,22 @@ func (s *Server) Start() error {
 // verify this
 func (s *Server) AcceptPeers() error {
 	for p := range s.addPeerCh {
-		s.AddNewPeer(&p)
+		s.AddNewPeer(p)
 	}
 	return nil
 }
 
 // add new peer to server
-func (s *Server) AddNewPeer(peer *peer.Peer) {
-	slog.Info("server", "add new peer", peer.Id)
+func (s *Server) AddNewPeer(peer peer.Peer) error {
+	id := peer.GetId()
+	conn := peer.GetConn()
+	slog.Info("server", "add new peer", id)
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	if _, ok := s.peers[peer.Id]; ok {
-		panic(fmt.Sprintf("peer already exists, %v", peer.Id))
+	if _, ok := s.peers[id]; ok {
+		return fmt.Errorf("peer already exists, %v", id)
 	}
-	s.peers[peer.Id] = &peer.Conn
+	s.peers[id] = conn
+
+	return nil
 }

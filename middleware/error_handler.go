@@ -3,7 +3,6 @@ package middleware
 import (
 	"chat-app/helper"
 	"context"
-	"fmt"
 	"net/http"
 	"time"
 )
@@ -13,7 +12,6 @@ func ErrorHandler(controller helper.ControllerFunc, method string) http.HandlerF
 		//check the method
 		if r.Method != method {
 			w.WriteHeader(http.StatusBadRequest)
-			fmt.Fprintf(w, "url not found")
 			return
 		}
 

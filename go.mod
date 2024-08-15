@@ -7,6 +7,8 @@ require (
 	golang.org/x/exp v0.0.0-20240808152545-0cdaa3abc0fa
 )
 
+require github.com/gorilla/websocket v1.5.3
+
 require (
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
